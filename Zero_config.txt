@@ -1,0 +1,4 @@
+#Pi zero /boot/config.txt
+arm_freq=1100
+core_freq=450
+over_voltage=6
