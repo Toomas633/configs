@@ -1,0 +1,6 @@
+alias update='sudo apt update && sudo apt upgrade -y'
+alias install='sudo apt install'
+alias shutdown='sudo shutdown -h now'
+alias restart='sudo shutdown -r now'
+alias disks='sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL'
+alias scan='nmap -sP'
