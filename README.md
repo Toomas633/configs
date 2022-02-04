@@ -1,6 +1,13 @@
 # Configs
 
-Simply download any of the files on pc or with `sudo wget` in the terminal.
+- [Configs](#configs)
+  * [Wifi config:](#wifi-config-)
+  * [Overclocking Pi 4:](#overclocking-pi-4-)
+  * [Overclocking Pi Zero:](#overclocking-pi-zero-)
+  * [Command aliases:](#command-aliases-)
+  * [Xmrig install script:](#xmrig-install-script-)
+    + [To install:](#to-install-)
+
 
 ## Wifi config:
 Copy the wpa_supplicant.conf file to your sd boot partition (should have files like bootcode.bin, loader.bin, start.elf, kernel.img, cmdline.txt) on pc or copy contents to `/etc/wpa_supplicant/wpa_supplicant.conf`
@@ -26,12 +33,3 @@ Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (serv
 * Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/configs/main/installers/xmrig.sh`
 * Allow running with `sudo chmod a+x xmrig.sh`
 * Run `sudo ./xmrig.sh`, fill in the 3 questions, and wait.
-
-
-- [Configs](#configs)
-  * [Wifi config:](#wifi-config-)
-  * [Overclocking Pi 4:](#overclocking-pi-4-)
-  * [Overclocking Pi Zero:](#overclocking-pi-zero-)
-  * [Command aliases:](#command-aliases-)
-  * [Xmrig install script:](#xmrig-install-script-)
-    + [To install:](#to-install-)
