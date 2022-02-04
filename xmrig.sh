@@ -1,7 +1,10 @@
 #! /bin/bash
-echo ----Xmrig installation script by Toomas633----
-echo ----------------------------------------------
+echo ______________________________________________
 echo
+echo ----Xmrig installation script by Toomas633----
+echo ______________________________________________
+echo
+sleep 10
 echo Wallet address:
 read wallet_address
 
@@ -15,26 +18,31 @@ echo ----Starting installation----
 
 echo ----Installing packets----
 
+sleep 5
 sudo apt install -y git build-essential cmake libuv1-dev libssl-dev libhwloc-dev
 
 echo ----Creating user miner----
 
+sleep 5
 sudo adduser miner --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 echo "miner:miner" | sudo chpasswd
 
 echo ----Cloning xmrig ----
 
+sleep 5
 cd /home/miner
 sudo git clone https://github.com/xmrig/xmrig.git
 sudo mkdir xmrig/build && cd xmrig/build
 
 echo ----Starting installation----
 
+sleep 5
 sudo cmake ..
 sudo make 
 
 echo ----Creating config file----
 
+sleep 5
 sudo cat > config.json << EOF
 {
     "autosave": true,
@@ -63,6 +71,7 @@ fi
 
 echo ----Enabling autostart service---- 
 
+sleep 5
 sudo cat > /etc/systemd/system/xmrig.service << EOF 
 [Unit]
 Description=XMRig Daemon
@@ -84,6 +93,13 @@ sudo systemctl enable xmrig.service
 
 echo ----Starting xmrig service----
 
+sleep 5
 sudo service xmrig start
 
-echo ----Done----
+echo _______________________________
+echo
+echo --------------Done-------------
+echo ----'Quiting in 10 seconds'----
+echo _______________________________
+sleep 10
+clear
