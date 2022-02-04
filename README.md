@@ -1,12 +1,12 @@
 # Configs
 
 - [Configs](#configs)
-  * [Wifi config:](#wifi-config-)
-  * [Overclocking Pi 4:](#overclocking-pi-4-)
-  * [Overclocking Pi Zero:](#overclocking-pi-zero-)
-  * [Command aliases:](#command-aliases-)
-  * [Xmrig install script:](#xmrig-install-script-)
-    + [To install:](#to-install-)
+  * [Wifi config:](#wifi-config)
+  * [Overclocking Pi 4:](#overclocking-pi-4)
+  * [Overclocking Pi Zero:](#overclocking-pi-zero)
+  * [Command aliases:](#command-aliases)
+  * [Xmrig install script:](#xmrig-install-script)
+    + [To install:](#to-install)
 
 
 ## Wifi config:
