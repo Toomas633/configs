@@ -67,7 +67,6 @@ sudo cat > config.json << EOF
     ]
 }
 EOF
-fi
 
 echo ----Enabling autostart service---- 
 
@@ -87,7 +86,6 @@ User=miner
 [Install]
 WantedBy=multi-user.target
 EOF
-fi
 
 sudo systemctl enable xmrig.service
 
