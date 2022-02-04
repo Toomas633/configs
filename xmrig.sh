@@ -4,7 +4,7 @@ echo
 echo ----Xmrig installation script by Toomas633----
 echo ______________________________________________
 echo
-sleep 10
+sleep 3
 echo Wallet address:
 read wallet_address
 
@@ -94,10 +94,10 @@ echo ----Starting xmrig service----
 sleep 5
 sudo service xmrig start
 
-echo _______________________________
+echo ______________________________
 echo
-echo --------------Done-------------
-echo ----'Quiting in 10 seconds'----
-echo _______________________________
-sleep 10
+echo -------------Done-------------
+echo ----'Quiting in 5 seconds'----
+echo ______________________________
+sleep 5
 clear
