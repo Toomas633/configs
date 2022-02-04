@@ -26,3 +26,12 @@ Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (serv
 * Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/configs/main/installers/xmrig.sh`
 * Allow running with `sudo chmod a+x xmrig.sh`
 * Run `sudo ./xmrig.sh`, fill in the 3 questions, and wait.
+
+
+- [Configs](#configs)
+  * [Wifi config:](#wifi-config-)
+  * [Overclocking Pi 4:](#overclocking-pi-4-)
+  * [Overclocking Pi Zero:](#overclocking-pi-zero-)
+  * [Command aliases:](#command-aliases-)
+  * [Xmrig install script:](#xmrig-install-script-)
+    + [To install:](#to-install-)
