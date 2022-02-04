@@ -1,4 +1,4 @@
-# Raspberry Pi configs
+# Configs
 
 Simply download any of the files on pc or with `sudo wget` in the terminal.
 
@@ -16,3 +16,13 @@ Included are some common aliases to make life and navigating the command line ea
 * Navigate to the home folder `cd ~`
 * Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/raspberry-pi-configs/main/.bash_aliases`
 * Reboot or relog
+
+## Xmrig install script:
+Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (server).
+*Asks for your wallet address and mingin pool url with port (for example gulf.moneroocean.com:10128) and device/miner name.
+*Creates a specific "miner" user so your home folder won't be cluttered.
+*Autoconfigures for startup and control as service.
+### To install:
+* Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/configs/main/xmrig.sh`
+* Allow running with `sudo chmod a+x xmrig.sh`
+* Run `sudo ./xmrig.sh`, fill in the 3 questions, and wait.
