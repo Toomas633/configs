@@ -23,6 +23,6 @@ Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (serv
 *Creates a specific "miner" user so your home folder won't be cluttered.
 *Autoconfigures for startup and control as service.
 ### To install:
-* Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/configs/main/xmrig.sh`
+* Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/configs/main/installers/xmrig.sh`
 * Allow running with `sudo chmod a+x xmrig.sh`
 * Run `sudo ./xmrig.sh`, fill in the 3 questions, and wait.
