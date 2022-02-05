@@ -50,7 +50,6 @@ sudo cat > config.json << EOF
         "enabled": true,
         "priority": 0,
         "max-threads-hint": 100,
-        #"rx/0": [-1, -1, -1],
     },
     "opencl": false,
     "cuda": false,
