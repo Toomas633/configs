@@ -26,14 +26,12 @@ Included are some common aliases to make life and navigating the command line ea
 
 ## Xmrig install script:
 Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (server).
-*Asks for your wallet address and mingin pool url with port (for example gulf.moneroocean.com:10128) and device/miner name.
-*Creates a specific "miner" user so your home folder won't be cluttered.
-*Autoconfigures for startup and control as service.
-
+* Asks for your wallet address and mingin pool url with port (for example gulf.moneroocean.com:10128) and device/miner name.
+* Creates a specific "miner" user so your home folder won't be cluttered.
+* Autoconfigures for startup and control as service.
 ### How to install:
 * Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/configs/main/installers/xmrig.sh`
 * Allow running with `sudo chmod a+x xmrig.sh`
 * Run `sudo ./xmrig.sh`, fill in the 3 questions, and wait.
-
 ### Optional:
 Add `"rx/0": [-1, -1, -1],` to `/home/miner/xmrig/build/config.json` under cpu: configuration to control cpu usage (each -1 represents a thread).
