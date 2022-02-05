@@ -7,6 +7,7 @@
   * [Command aliases:](#command-aliases)
   * [Xmrig install script:](#xmrig-install-script)
     + [To install:](#to-install)
+    + [Optional:](#optional)
 
 
 ## Wifi config:
