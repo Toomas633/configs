@@ -19,31 +19,31 @@ echo ----Starting installation----
 echo ----Installing packets----
 
 sleep 5
-sudo apt install -y git build-essential cmake libuv1-dev libssl-dev libhwloc-dev
+apt install -y git build-essential cmake libuv1-dev libssl-dev libhwloc-dev
 
 echo ----Creating user miner----
 
 sleep 5
-sudo adduser miner --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+adduser miner --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 echo "miner:miner" | sudo chpasswd
 
 echo ----Cloning xmrig ----
 
 sleep 5
 cd /home/miner
-sudo git clone https://github.com/xmrig/xmrig.git
-sudo mkdir xmrig/build && cd xmrig/build
+git clone https://github.com/xmrig/xmrig.git
+mkdir xmrig/build && cd xmrig/build
 
 echo ----Starting installation----
 
 sleep 5
-sudo cmake ..
-sudo make 
+cmake ..
+make 
 
 echo ----Creating config file----
 
 sleep 5
-sudo cat > config.json << EOF
+cat > config.json << EOF
 {
     "autosave": true,
     "cpu": {
@@ -71,7 +71,7 @@ EOF
 echo ----Enabling autostart service---- 
 
 sleep 5
-sudo cat > /etc/systemd/system/xmrig.service << EOF 
+cat > /etc/systemd/system/xmrig.service << EOF 
 [Unit]
 Description=XMRig Daemon
 After=network.target
@@ -87,12 +87,12 @@ User=miner
 WantedBy=multi-user.target
 EOF
 
-sudo systemctl enable xmrig.service
+systemctl enable xmrig.service
 
 echo ----Starting xmrig service----
 
 sleep 5
-sudo service xmrig start
+service xmrig start
 
 echo ______________________________
 echo
