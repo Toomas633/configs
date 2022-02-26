@@ -27,7 +27,7 @@ Included are some common aliases to make life and navigating the command line ea
 
 ## Xmrig install script:
 Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (server).
-* Asks for your wallet address and mingin pool url with port *(for example gulf.moneroocean.stream:10128)* and device/miner name.
+* Asks for your wallet address and mingin pool url with port *(for example `gulf.moneroocean.stream:10128`)* and device/miner name.
 * Creates a specific *"miner"* user so your home folder won't be cluttered.
 * Autoconfigures for startup and control as service *(xmrig.service)*.
 ### How to install:
