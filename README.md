@@ -36,4 +36,6 @@ Automatic cloning, building and configuring of xmrig for PiOSx64 or Ubuntu (serv
 * Run `sudo ./xmrig.sh`, fill in the 3 questions, and wait.
 ### Optional:
 * Add `"rx/0": [-1, -1, -1],` to `/home/miner/xmrig/build/config.json` under cpu: configuration to control cpu usage (each -1 represents a thread).
-* Donate Monero: `46b9jWCbtfDEGibADKG5uqL12r8RDohm1ZjkSK2ZW3T3gTsUYSPGpvu5fvhJZjuBGRbN8HnKWc8T6RFvzuUxTQjFF5osdeP`.
+## Donate:
+Monero: `8Ajf5M6meNpL9TaHuDRbXjAH31LcQ9ge5BEiwMZjLaoiMDZRxaVy19FgbP4tbUKpKoeq1kqCvjyaTdmCMQGhekWoQ2KgVeV`
+Bitcoin: `3NPFV9ivECdSgyCXeNk4h5Gm3q1xiDRnPV`
