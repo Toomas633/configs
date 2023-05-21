@@ -1,4 +1,8 @@
 #Pi zero /boot/config.txt
 arm_freq=1100
-core_freq=450
+core_freq=600
+gpu_freq=600
+sdram_freq=600
+sdram_schmoo=0x02000020
 over_voltage=6
+over_voltage_sdram=4
