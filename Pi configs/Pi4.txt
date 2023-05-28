@@ -1,9 +1,12 @@
 #Pi 4 /boot/config.txt
 
 #Overclocking
-arm_freq=2000
+arm_freq=2100
 over_voltage=6
 gpu_freq=750
+gpu_mem=512
+
+
 
 #Disable BT
 dtoverlay=disable-bt
