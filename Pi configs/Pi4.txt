@@ -6,8 +6,6 @@ over_voltage=6
 gpu_freq=750
 gpu_mem=512
 
-
-
 #Disable BT
 dtoverlay=disable-bt
 
