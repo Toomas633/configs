@@ -23,7 +23,7 @@ Included are some common aliases to make life and navigating the command line ea
 * Reboot or relog
 
 ## MOTD installer:
-Clone this repository and run `sudo bash install-motd.sh` to install/update the MOTD scripts under `/etc/update-motd.d` (requires sudo and installs dependencies like lsb-release, ubuntu-release-upgrader-core, unattended-upgrades, ubuntu-advantage-tools, update-notifier, util-linux, procps, curl; scripts for docker/systemd/Ubuntu are installed conditionally). The installer uses dpkg-divert to locally divert default update-motd scripts so package upgrades do not restore them.
+Clone this repository and run `sudo bash install-motd.sh` to install/update the MOTD scripts under `/etc/update-motd.d` (requires sudo and apt-get on a Debian-based system; installs dependencies like lsb-release, unattended-upgrades, util-linux, procps, curl, plus Ubuntu-only packages such as ubuntu-release-upgrader-core, ubuntu-advantage-tools, and update-notifier when on Ubuntu; scripts for docker/systemd/Ubuntu are installed conditionally). The installer uses dpkg-divert to locally divert default update-motd scripts so package upgrades do not restore them.
 
 ## Donate:
 [toomas633.com/donate](https://toomas633.com/donate/)

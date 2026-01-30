@@ -7,7 +7,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 if ! command -v apt-get >/dev/null 2>&1; then
-  echo "apt-get not found; this script requires Ubuntu." >&2
+  echo "apt-get not found; this script requires a Debian-based system." >&2
   exit 1
 fi
 
@@ -17,14 +17,6 @@ if [ -r /etc/os-release ]; then
   if [ "${ID:-}" = "ubuntu" ] || [[ "${ID_LIKE:-}" == *ubuntu* ]]; then
     is_ubuntu=true
   fi
-else
-  echo "Unable to detect OS; this script requires Ubuntu." >&2
-  exit 1
-fi
-
-if [ "$is_ubuntu" != true ]; then
-  echo "This script requires Ubuntu." >&2
-  exit 1
 fi
 
 if [ -e /etc/update-motd ]; then
@@ -42,15 +34,23 @@ if ! apt-get update; then
   echo "apt-get update failed." >&2
   exit 1
 fi
-if ! apt-get install -y \
-  lsb-release \
-  ubuntu-release-upgrader-core \
-  unattended-upgrades \
-  ubuntu-advantage-tools \
-  update-notifier \
-  util-linux \
-  procps \
-  curl; then
+packages=(
+  lsb-release
+  unattended-upgrades
+  util-linux
+  procps
+  curl
+)
+
+if [ "$is_ubuntu" = true ]; then
+  packages+=(
+    ubuntu-release-upgrader-core
+    ubuntu-advantage-tools
+    update-notifier
+  )
+fi
+
+if ! apt-get install -y "${packages[@]}"; then
   echo "apt-get install failed." >&2
   exit 1
 fi
