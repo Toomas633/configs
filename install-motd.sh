@@ -11,14 +11,19 @@ if ! command -v apt-get >/dev/null 2>&1; then
   exit 1
 fi
 
+is_ubuntu=false
 if [ -r /etc/os-release ]; then
   . /etc/os-release
-  if [ "${ID:-}" != "ubuntu" ] && [[ "${ID_LIKE:-}" != *ubuntu* ]]; then
-    echo "This script requires Ubuntu." >&2
-    exit 1
+  if [ "${ID:-}" = "ubuntu" ] || [[ "${ID_LIKE:-}" == *ubuntu* ]]; then
+    is_ubuntu=true
   fi
 else
   echo "Unable to detect OS; this script requires Ubuntu." >&2
+  exit 1
+fi
+
+if [ "$is_ubuntu" != true ]; then
+  echo "This script requires Ubuntu." >&2
   exit 1
 fi
 
@@ -40,7 +45,6 @@ if ! apt-get update; then
   exit 1
 fi
 if ! apt-get install -y \
-  docker.io \
   lsb-release \
   ubuntu-release-upgrader-core \
   unattended-upgrades \
@@ -58,13 +62,39 @@ BASE_URL="https://raw.githubusercontent.com/Toomas633/configs/HEAD/motd"
 SCRIPTS=(
   10-sysinfo
   20-diskspace
-  30-services
-  50-docker
+)
+
+has_systemd=false
+if command -v systemctl >/dev/null 2>&1 && [ "$(cat /proc/1/comm 2>/dev/null)" = "systemd" ]; then
+  has_systemd=true
+fi
+
+has_docker=false
+if command -v docker >/dev/null 2>&1; then
+  has_docker=true
+fi
+
+if [ "$has_systemd" = true ]; then
+  SCRIPTS+=(30-services)
+fi
+
+if [ "$has_docker" = true ]; then
+  SCRIPTS+=(50-docker)
+fi
+
+SCRIPTS+=(
   60-pemmican
   90-updates-available
   91-release-upgrade
   92-unattended-upgrades
-  93-contract-ua-esm-status
+)
+
+# Explicit Ubuntu gating for the UA ESM status script.
+if [ "$is_ubuntu" = true ]; then
+  SCRIPTS+=(93-contract-ua-esm-status)
+fi
+
+SCRIPTS+=(
   95-hwe-eol
   97-overlayroot
   98-reboot-required
