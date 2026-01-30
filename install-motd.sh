@@ -39,7 +39,7 @@ packages=(
   unattended-upgrades
   util-linux
   procps
-  curl
+  wget
 )
 
 if [ "$is_ubuntu" = true ]; then
@@ -137,7 +137,7 @@ echo "Clearing /etc/update-motd.d (existing scripts will be removed)..."
 find /etc/update-motd.d -mindepth 1 ! -name '*.disabled' -delete
 
 for script in "${SCRIPTS[@]}"; do
-  if ! curl -fsSL "${BASE_URL}/${script}" -o "/etc/update-motd.d/${script}"; then
+  if ! wget -qO "/etc/update-motd.d/${script}" "${BASE_URL}/${script}"; then
     echo "Failed to download ${script}." >&2
     exit 1
   fi
