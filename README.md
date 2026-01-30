@@ -23,7 +23,7 @@ Included are some common aliases to make life and navigating the command line ea
 * Reboot or relog
 
 ## MOTD installer:
-Download and run the installer with wget: `wget -qO install-motd.sh https://raw.githubusercontent.com/Toomas633/configs/refs/heads/main/install-motd.sh && sudo bash install-motd.sh` to install/update the MOTD scripts under `/etc/update-motd.d` (requires sudo and apt-get on a Debian-based system; installs dependencies like lsb-release, unattended-upgrades, util-linux, procps, wget, plus Ubuntu-only packages such as ubuntu-release-upgrader-core, ubuntu-advantage-tools, and update-notifier when on Ubuntu; scripts for docker/systemd/Ubuntu are installed conditionally).
+Download and run the installer with wget: `wget -qO install-motd.sh https://raw.githubusercontent.com/Toomas633/configs/refs/heads/main/install-motd.sh && sudo bash install-motd.sh` to install/update the MOTD scripts under `/etc/update-motd.d` (intended for server/headless installations without a GUI; requires sudo and apt-get on a Debian-based system; installs dependencies like lsb-release, unattended-upgrades, util-linux, procps, wget, plus Ubuntu-only packages such as ubuntu-release-upgrader-core, ubuntu-advantage-tools, and update-notifier when on Ubuntu; scripts for docker/systemd/Ubuntu are installed conditionally).
 Alternatively, pipe it directly to bash: `wget -qO- https://raw.githubusercontent.com/Toomas633/configs/refs/heads/main/install-motd.sh | sudo bash` (consider downloading and reviewing the script before piping).
 The installer uses dpkg-divert to locally divert default update-motd scripts so package upgrades do not restore them.
 
