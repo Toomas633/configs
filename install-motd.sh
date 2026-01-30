@@ -56,7 +56,7 @@ if ! apt-get install -y "${packages[@]}"; then
 fi
 
 echo "Downloading MOTD scripts..."
-BASE_URL="https://raw.githubusercontent.com/Toomas633/configs/main/motd"
+BASE_URL="https://raw.githubusercontent.com/Toomas633/configs/refs/heads/main/motd"
 SCRIPTS=(
   10-sysinfo
   20-diskspace
