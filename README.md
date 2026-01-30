@@ -5,6 +5,7 @@
   * [Overclocking Pi 4:](#overclocking-pi-4)
   * [Overclocking Pi Zero:](#overclocking-pi-zero)
   * [Command aliases:](#command-aliases)
+  * [MOTD installer:](#motd-installer)
 
 ## Wifi config:
 Copy the wpa_supplicant.conf file to your sd boot partition (should have files like bootcode.bin, loader.bin, start.elf, kernel.img, cmdline.txt) on pc or copy contents to `/etc/wpa_supplicant/wpa_supplicant.conf`
@@ -20,6 +21,9 @@ Included are some common aliases to make life and navigating the command line ea
 * Navigate to the home folder `cd ~`
 * Download the file with `sudo wget https://raw.githubusercontent.com/Toomas633/raspberry-pi-configs/main/.bash_aliases`
 * Reboot or relog
+
+## MOTD installer:
+Clone this repository and run `sudo bash install-motd.sh` to install/update the MOTD scripts under `/etc/update-motd.d` (requires sudo and installs dependencies like docker.io, lsb-release, ubuntu-release-upgrader-core, unattended-upgrades, ubuntu-advantage-tools, update-notifier, util-linux, procps, curl).
 
 ## Donate:
 [toomas633.com/donate](https://toomas633.com/donate/)
