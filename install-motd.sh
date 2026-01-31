@@ -27,6 +27,7 @@ if [ -e /etc/update-motd ]; then
   fi
 fi
 mkdir -p /etc/update-motd.d
+find /etc/update-motd.d -mindepth 1 -maxdepth 1 -name '*.disabled' -delete
 
 echo "Installing MOTD dependencies..."
 export DEBIAN_FRONTEND=noninteractive
@@ -114,20 +115,26 @@ SCRIPTS+=(
 )
 
 if command -v dpkg-divert >/dev/null 2>&1; then
+  divert_dir="/usr/local/share/update-motd-diverted"
+  mkdir -p "$divert_dir"
   add_diversion() {
     local path="$1"
-    local rename_existing="${2:-false}"
-    local rename_flag="--no-rename"
-    if [[ "$path" == *.disabled ]]; then
-      return 0
+    local divert_path="${divert_dir}/$(basename "$path")"
+    local existing_diversion=""
+    existing_diversion="$(
+      dpkg-divert --list "$path" 2>/dev/null \
+        | awk -v p="$path" 'index($0, "diversion of " p " to ") {sub(".*diversion of " p " to ",""); sub(" by.*",""); print; exit}'
+    )"
+    if [ -n "$existing_diversion" ]; then
+      if [ "$existing_diversion" = "$divert_path" ]; then
+        return 0
+      fi
+      if ! dpkg-divert --local --remove --no-rename --divert "$existing_diversion" "$path"; then
+        echo "Failed to remove diversion for ${path}." >&2
+        exit 1
+      fi
     fi
-    if dpkg-divert --list "$path" 2>/dev/null | grep -qF "diversion of ${path} to"; then
-      return 0
-    fi
-    if [ "$rename_existing" = true ] && [ -e "$path" ]; then
-      rename_flag="--rename"
-    fi
-    if ! dpkg-divert --local "$rename_flag" --divert "${path}.disabled" --add "$path"; then
+    if ! dpkg-divert --local --no-rename --divert "$divert_path" --add "$path"; then
       echo "Failed to divert ${path}." >&2
       exit 1
     fi
@@ -135,9 +142,9 @@ if command -v dpkg-divert >/dev/null 2>&1; then
 
   declare -A diverted_paths=()
   while IFS= read -r -d '' script; do
-    add_diversion "$script" true
+    add_diversion "$script"
     diverted_paths["$script"]=1
-  done < <(find /etc/update-motd.d -mindepth 1 -maxdepth 1 \( -type f -o -type l \) ! -name '*.disabled' -print0)
+  done < <(find /etc/update-motd.d -mindepth 1 -maxdepth 1 \( -type f -o -type l \) -print0)
 
   # Preemptively divert installer-managed scripts so package upgrades cannot restore them.
   for script in "${SCRIPTS[@]}"; do
@@ -150,8 +157,7 @@ if command -v dpkg-divert >/dev/null 2>&1; then
 fi
 
 echo "Clearing /etc/update-motd.d (existing scripts will be removed)..."
-# Preserve dpkg-divert renamed files.
-find /etc/update-motd.d -mindepth 1 ! -name '*.disabled' -delete
+find /etc/update-motd.d -mindepth 1 -delete
 
 for script in "${SCRIPTS[@]}"; do
   if ! wget -qO "/etc/update-motd.d/${script}" "${BASE_URL}/${script}"; then
