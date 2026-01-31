@@ -152,7 +152,7 @@ find /etc/update-motd.d -mindepth 1 ! -name '*.disabled' -delete
 
 for script in "${SCRIPTS[@]}"; do
   if ! wget -qO "/etc/update-motd.d/${script}" "${BASE_URL}/${script}"; then
-    echo "Failed to download ${script} from ${BASE_URL}/${script}." >&2
+    echo "Failed to download ${script} from ${BASE_URL}/${script}. Check the URL and network connectivity." >&2
     exit 1
   fi
   if [ ! -s "/etc/update-motd.d/${script}" ]; then
