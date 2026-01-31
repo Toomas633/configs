@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script must be run as root." >&2
+  exit 1
+fi
+
+if ! command -v apt-get >/dev/null 2>&1; then
+  echo "apt-get not found; this script requires a Debian-based system." >&2
+  exit 1
+fi
+
+is_ubuntu=false
+if [ -r /etc/os-release ]; then
+  . /etc/os-release
+  if [ "${ID:-}" = "ubuntu" ] || [[ "${ID_LIKE:-}" == *ubuntu* ]]; then
+    is_ubuntu=true
+  fi
+fi
+
+if [ -e /etc/update-motd ]; then
+  if [ -L /etc/update-motd ] || [ -f /etc/update-motd ]; then
+    rm -f /etc/update-motd
+  elif [ -d /etc/update-motd ]; then
+    rm -rf /etc/update-motd
+  fi
+fi
+mkdir -p /etc/update-motd.d
+find /etc/update-motd.d -mindepth 1 -maxdepth 1 -name '*.disabled' -delete
+
+echo "Installing MOTD dependencies..."
+export DEBIAN_FRONTEND=noninteractive
+apt_log="$(mktemp /tmp/install-motd-apt.XXXXXX.log)"
+echo "Updating package lists..."
+if ! apt-get update -qq >"$apt_log" 2>&1; then
+  echo "apt-get update failed." >&2
+  tail -n 50 "$apt_log" >&2
+  exit 1
+fi
+packages=(
+  lsb-release
+  unattended-upgrades
+  util-linux
+  procps
+  wget
+  ca-certificates
+)
+
+if [ "$is_ubuntu" = true ]; then
+  packages+=(
+    ubuntu-release-upgrader-core
+    ubuntu-advantage-tools
+    update-notifier
+  )
+fi
+
+echo "Installing dependencies..."
+if ! apt-get install -y "${packages[@]}" >>"$apt_log" 2>&1; then
+  echo "apt-get install failed." >&2
+  tail -n 50 "$apt_log" >&2
+  exit 1
+fi
+rm -f "$apt_log"
+
+echo "Installed packages:"
+for package in "${packages[@]}"; do
+  if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "install ok installed"; then
+    echo "  - ${package}"
+  fi
+done
+
+echo "Downloading MOTD scripts..."
+BASE_URL="https://raw.githubusercontent.com/Toomas633/configs/refs/heads/main/motd"
+SCRIPTS=(
+  10-sysinfo
+  20-diskspace
+)
+
+has_systemd=false
+if command -v systemctl >/dev/null 2>&1 && [ "$(cat /proc/1/comm 2>/dev/null)" = "systemd" ]; then
+  has_systemd=true
+fi
+
+has_docker=false
+if command -v docker >/dev/null 2>&1; then
+  has_docker=true
+fi
+
+if [ "$has_systemd" = true ]; then
+  SCRIPTS+=(30-services)
+fi
+
+if [ "$has_docker" = true ]; then
+  SCRIPTS+=(50-docker)
+fi
+
+SCRIPTS+=(
+  60-pemmican
+  90-updates-available
+  91-release-upgrade
+  92-unattended-upgrades
+)
+
+# Explicit Ubuntu gating for the UA ESM status script.
+if [ "$is_ubuntu" = true ]; then
+  SCRIPTS+=(93-contract-ua-esm-status)
+fi
+
+SCRIPTS+=(
+  95-hwe-eol
+  97-overlayroot
+  98-reboot-required
+  99-fsck-at-reboot
+)
+
+if command -v dpkg-divert >/dev/null 2>&1; then
+  divert_dir="/usr/local/share/update-motd-diverted"
+  mkdir -p "$divert_dir"
+  add_diversion() {
+    local path="$1"
+    local divert_path="${divert_dir}/$(basename "$path")"
+    local existing_diversion=""
+    existing_diversion="$(
+      dpkg-divert --list "$path" 2>/dev/null \
+        | awk -v p="$path" 'index($0, "diversion of " p " to ") {sub(".*diversion of " p " to ",""); sub(" by.*",""); print; exit}'
+    )"
+    if [ -n "$existing_diversion" ]; then
+      if [ "$existing_diversion" = "$divert_path" ]; then
+        return 0
+      fi
+      if ! dpkg-divert --local --remove --no-rename --divert "$existing_diversion" "$path"; then
+        echo "Failed to remove diversion for ${path}." >&2
+        exit 1
+      fi
+    fi
+    if ! dpkg-divert --local --no-rename --divert "$divert_path" --add "$path"; then
+      echo "Failed to divert ${path}." >&2
+      exit 1
+    fi
+  }
+
+  declare -A diverted_paths=()
+  while IFS= read -r -d '' script; do
+    add_diversion "$script"
+    diverted_paths["$script"]=1
+  done < <(find /etc/update-motd.d -mindepth 1 -maxdepth 1 \( -type f -o -type l \) -print0)
+
+  # Preemptively divert installer-managed scripts so package upgrades cannot restore them.
+  for script in "${SCRIPTS[@]}"; do
+    script_path="/etc/update-motd.d/${script}"
+    if [ -n "${diverted_paths[$script_path]:-}" ]; then
+      continue
+    fi
+    add_diversion "$script_path" false
+  done
+fi
+
+echo "Clearing /etc/update-motd.d (existing scripts will be removed)..."
+find /etc/update-motd.d -mindepth 1 -delete
+
+for script in "${SCRIPTS[@]}"; do
+  if ! wget -qO "/etc/update-motd.d/${script}" "${BASE_URL}/${script}"; then
+    echo "Failed to download ${script} from ${BASE_URL}/${script}. Check the URL and network connectivity." >&2
+    exit 1
+  fi
+  if [ ! -s "/etc/update-motd.d/${script}" ]; then
+    echo "Downloaded ${script} is empty." >&2
+    exit 1
+  fi
+  chmod +x "/etc/update-motd.d/${script}"
+done
+
+echo "MOTD scripts installed."
+echo "To customize:"
+echo "  - Edit the services array in /etc/update-motd.d/30-services"
+echo "  - Edit the mountpoints variable in /etc/update-motd.d/20-diskspace"
