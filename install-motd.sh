@@ -118,6 +118,9 @@ if command -v dpkg-divert >/dev/null 2>&1; then
     local path="$1"
     local rename_existing="${2:-false}"
     local rename_flag="--no-rename"
+    if [[ "$path" == *.disabled ]]; then
+      return 0
+    fi
     if dpkg-divert --list "$path" 2>/dev/null | grep -qF "diversion of ${path} to"; then
       return 0
     fi
@@ -134,7 +137,7 @@ if command -v dpkg-divert >/dev/null 2>&1; then
   while IFS= read -r -d '' script; do
     add_diversion "$script" true
     diverted_paths["$script"]=1
-  done < <(find /etc/update-motd.d -mindepth 1 -maxdepth 1 \( -type f -o -type l \) -print0)
+  done < <(find /etc/update-motd.d -mindepth 1 -maxdepth 1 \( -type f -o -type l \) ! -name '*.disabled' -print0)
 
   # Preemptively divert installer-managed scripts so package upgrades cannot restore them.
   for script in "${SCRIPTS[@]}"; do
