@@ -30,8 +30,11 @@ mkdir -p /etc/update-motd.d
 
 echo "Installing MOTD dependencies..."
 export DEBIAN_FRONTEND=noninteractive
-if ! apt-get update; then
+apt_log="$(mktemp /tmp/install-motd-apt.XXXXXX.log)"
+echo "Updating package lists..."
+if ! apt-get update -qq >"$apt_log" 2>&1; then
   echo "apt-get update failed." >&2
+  tail -n 50 "$apt_log" >&2
   exit 1
 fi
 packages=(
@@ -40,6 +43,7 @@ packages=(
   util-linux
   procps
   wget
+  ca-certificates
 )
 
 if [ "$is_ubuntu" = true ]; then
@@ -50,10 +54,20 @@ if [ "$is_ubuntu" = true ]; then
   )
 fi
 
-if ! apt-get install -y "${packages[@]}"; then
+echo "Installing dependencies..."
+if ! apt-get install -y "${packages[@]}" >>"$apt_log" 2>&1; then
   echo "apt-get install failed." >&2
+  tail -n 50 "$apt_log" >&2
   exit 1
 fi
+rm -f "$apt_log"
+
+echo "Installed packages:"
+for package in "${packages[@]}"; do
+  if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "install ok installed"; then
+    echo "  - ${package}"
+  fi
+done
 
 echo "Downloading MOTD scripts..."
 BASE_URL="https://raw.githubusercontent.com/Toomas633/configs/refs/heads/main/motd"
@@ -138,7 +152,7 @@ find /etc/update-motd.d -mindepth 1 ! -name '*.disabled' -delete
 
 for script in "${SCRIPTS[@]}"; do
   if ! wget -qO "/etc/update-motd.d/${script}" "${BASE_URL}/${script}"; then
-    echo "Failed to download ${script}." >&2
+    echo "Failed to download ${script} from ${BASE_URL}/${script}." >&2
     exit 1
   fi
   if [ ! -s "/etc/update-motd.d/${script}" ]; then
