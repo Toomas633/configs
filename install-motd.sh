@@ -172,3 +172,6 @@ for script in "${SCRIPTS[@]}"; do
 done
 
 echo "MOTD scripts installed."
+echo "To customize:"
+echo "  - Edit the services array in /etc/update-motd.d/30-services"
+echo "  - Edit the mountpoints variable in /etc/update-motd.d/20-diskspace"
